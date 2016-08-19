@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Reform.createModule(ReModule.class).getConfig(this, new OnReformListener() {
+        Reform.getModuleInstance(ReModule.class).getConfig(this, new OnReformListener() {
             @Override
             public void onResponse(ReformResponse response) {
                 if (response.isSuccess()) {
@@ -45,5 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Reform.getModuleInstance(ReModule.class).destroy(this);
     }
 }

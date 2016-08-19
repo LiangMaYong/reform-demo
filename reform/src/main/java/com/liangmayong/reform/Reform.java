@@ -8,7 +8,9 @@ import com.liangmayong.reform.error.ReformError;
 import com.liangmayong.reform.error.ReformUnkownError;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +25,8 @@ public final class Reform {
     private static boolean DEBUG = true;
     // reformMap
     private static Map<String, Reform> reformMap = new HashMap<String, Reform>();
+    // reformModuleMap
+    private static Map<String, ReformModule> reformModuleMap = new HashMap<String, ReformModule>();
 
     /**
      * setDebug
@@ -43,18 +47,21 @@ public final class Reform {
     }
 
     /**
-     * create
+     * getModuleInstance
      *
      * @param clazz clazz
      * @return reform module
      */
-    public static final <T extends ReformModule> T createModule(Class<T> clazz) {
+    public static final <T extends ReformModule> T getModuleInstance(Class<T> clazz) {
         if (clazz == null) {
             // clazz == null
             ReformLog.e("module class == null");
             return null;
         }
-
+        String key = clazz.getName();
+        if (reformModuleMap.containsKey(key)) {
+            return (T) reformModuleMap.get(key);
+        }
         try {
             Constructor<T> classConstructor = clazz.getDeclaredConstructor();
             classConstructor.setAccessible(true);
@@ -83,8 +90,10 @@ public final class Reform {
             }
             t.setReform(reform);
             t.setConverter(reformConverter);
+            reformModuleMap.put(key, t);
             return t;
         } catch (Exception e) {
+            ReformLog.e("create module error", e);
         }
         return null;
     }
@@ -119,6 +128,8 @@ public final class Reform {
 
     // reform interceptor
     private ReformInterceptor interceptor;
+    // reformParameterList
+    private List<ReformParameter> reformParameterList = new ArrayList<ReformParameter>();
 
     /**
      * Reform
@@ -153,6 +164,7 @@ public final class Reform {
             listener.onFailure(new ReformUnkownError("ReformInterceptor is null"));
             return;
         }
+        reformParameterList.add(parameter);
         ReformInterceptor interceptor = parameter.getInterceptor();
         if (interceptor == null) {
             interceptor = getInterceptor();
@@ -169,6 +181,7 @@ public final class Reform {
                     }
                     listener.onResponse(response);
                 }
+                reformParameterList.remove(parameter);
                 ReformLog.d("onResponse:" + response.getUrl());
                 ReformLog.d("onResponse:" + response.getBody());
             }
@@ -178,6 +191,7 @@ public final class Reform {
                 if (listener != null) {
                     listener.onFailure(e);
                 }
+                reformParameterList.remove(parameter);
                 ReformLog.d("onFailure", e);
             }
         });
@@ -201,6 +215,7 @@ public final class Reform {
         if (interceptor == null) {
             interceptor = getInterceptor();
         }
+        reformParameterList.add(parameter);
         parameter.setCommonHeaders(interceptor.getCommonHeaders());
         ReformResponse response = interceptor.execute(context, url, parameter);
         if (parameter != null && parameter.getConverter() != null) {
@@ -208,6 +223,7 @@ public final class Reform {
         } else {
             response.setConverter(converter);
         }
+        reformParameterList.remove(parameter);
         return response;
     }
 
@@ -233,5 +249,10 @@ public final class Reform {
             return;
         }
         getInterceptor().destroy(context);
+        for (int i = 0; i < reformParameterList.size(); i++) {
+            if (reformParameterList.get(i).getInterceptor() != null) {
+                reformParameterList.get(i).getInterceptor().destroy(context);
+            }
+        }
     }
 }
