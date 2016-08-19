@@ -33,14 +33,24 @@ public class ReformParameter {
         NET, NET_LOCAL, LOCAL, LOCAL_NET;
     }
 
+    //method
     private Method method = Method.GET;
+    //params
     private Map<String, String> params = null;
+    //headers
     private Map<String, String> headers = null;
+    //commonheaders
     private Map<String, String> commonheaders = null;
+    //converter
     private ReformConverter converter = null;
+    //interceptor
     private ReformInterceptor interceptor = null;
 
+    //cache enable
     private boolean cacheEnable = false;
+    //local cache
+    private boolean localCache = false;
+    //extras
     private Bundle extras = null;
 
     public ReformParameter() {
@@ -178,9 +188,11 @@ public class ReformParameter {
      * setCacheEnable
      *
      * @param cacheEnable cacheEnable
+     * @return this
      */
-    public void setCacheEnable(boolean cacheEnable) {
+    public ReformParameter setCacheEnable(boolean cacheEnable) {
         this.cacheEnable = cacheEnable;
+        return this;
     }
 
     /**
@@ -224,4 +236,19 @@ public class ReformParameter {
         return method;
     }
 
+
+    /**
+     * setLocalCache
+     *
+     * @param localCache localCache
+     * @return this
+     */
+    public ReformParameter setLocalCache(boolean localCache) {
+        this.localCache = localCache;
+        return this;
+    }
+
+    public boolean isLocalCache() {
+        return localCache;
+    }
 }
