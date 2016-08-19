@@ -13,7 +13,7 @@ import java.util.List;
 public class ReformConv implements ReformConverter {
     @Override
     public boolean isSuccess(ReformResponse reformResponse) {
-        if (reformResponse.parseJsonInt("result_code", -1) != 100000) {
+        if (reformResponse.parseJsonInt("result_code", -1) == 100000) {
             return true;
         }
         return false;

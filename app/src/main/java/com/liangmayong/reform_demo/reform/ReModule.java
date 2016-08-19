@@ -19,13 +19,16 @@ import java.util.Map;
 public class ReModule extends ReformModule {
 
     public void getConfig(Context context, OnReformListener listener) {
+        ReformParameter parameter = new ReformParameter();
+        parameter.setMethod(ReformParameter.Method.POST);
+        enqueue(context, "./get_app_config", parameter, listener);
+    }
+    public void getOSS(Context context, OnReformListener listener) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("App-Version", "2.0.0");
-        headers.put("App-Id", "2");
-        headers.put("Expert-Id", "1");
+        headers.put("Expert-Id2", "1");
         ReformParameter parameter = new ReformParameter();
         parameter.setHeaders(headers);
         parameter.setMethod(ReformParameter.Method.POST);
-        enqueue(context, "get_app_config", parameter, listener);
+        enqueue(context, "http://ssssssssssss..com/get_app_config", parameter, listener);
     }
 }

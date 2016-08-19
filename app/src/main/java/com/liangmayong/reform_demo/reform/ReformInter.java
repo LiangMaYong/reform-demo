@@ -16,6 +16,7 @@ import com.liangmayong.reform.error.ReformUnkownError;
 import com.liangmayong.volleyutils.VolleyErrorHelper;
 import com.liangmayong.volleyutils.VolleyUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,7 +35,11 @@ public class ReformInter implements ReformInterceptor {
 
     @Override
     public Map<String, String> getCommonHeaders() {
-        return null;
+        Map<String, String> headers = new HashMap<>();
+        headers.put("App-Version", "2.0.0");
+        headers.put("App-Id", "2");
+        headers.put("Expert-Id", "1");
+        return headers;
     }
 
     @Override

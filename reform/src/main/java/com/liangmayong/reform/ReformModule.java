@@ -87,14 +87,15 @@ public class ReformModule {
      * @return url
      */
     private String parseUrl(String url) {
-        if (url.startsWith("http://") || url.startsWith("https://")) {
+        if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("ftp://")) {
             return url;
         } else if (url.startsWith("/")) {
-            int sunStart = 0;
-            if (getReform().getBaseUrl().endsWith("/")) {
-                sunStart = 1;
+            String httpName = "";
+            int indexStart = getReform().getBaseUrl().indexOf("://");
+            if (indexStart > 0) {
+                httpName = getReform().getBaseUrl().substring(0, indexStart) + "://";
             }
-            return getReform().getBaseUrl() + url.substring(sunStart);
+            return httpName + getUrlHost(getReform().getBaseUrl()) + url;
         } else if (url.startsWith("./")) {
             int sunStart = 1;
             if (getReform().getBaseUrl().endsWith("/")) {

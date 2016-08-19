@@ -22,14 +22,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(ReformResponse response) {
                 if (response.isSuccess()) {
-
                     try {
-                        response.parseJsonString("description");
-                        String name = response.parseJsonArray("return_value").getJSONObject(0).getString("name");
-                        String color = response.parseJsonArray("return_value").getJSONObject(0).getString("color");
-                        String fullname = response.parseJsonArray("return_value").getJSONObject(0).getString("fullname");
-                        String logo_url = response.parseJsonArray("return_value").getJSONObject(0).getString("logo_url");
-                        Toast.makeText(getApplicationContext(), name + "\n" + color + "\n" + fullname + "\n" + logo_url, Toast.LENGTH_SHORT).show();
+                        if (response.parseJsonArray("return_value").length() > 0) {
+                            String name = response.parseJsonArray("return_value").getJSONObject(0).getString("name");
+                            String color = response.parseJsonArray("return_value").getJSONObject(0).getString("color");
+                            String fullname = response.parseJsonArray("return_value").getJSONObject(0).getString("fullname");
+                            String logo_url = response.parseJsonArray("return_value").getJSONObject(0).getString("logo_url");
+                            Toast.makeText(getApplicationContext(), name + "\n" + color + "\n" + fullname + "\n" + logo_url, Toast.LENGTH_SHORT).show();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
