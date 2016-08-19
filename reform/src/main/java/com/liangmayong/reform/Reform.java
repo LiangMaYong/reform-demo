@@ -254,5 +254,6 @@ public final class Reform {
                 reformParameterList.get(i).getInterceptor().destroy(context);
             }
         }
+        reformParameterList.removeAll(reformParameterList);
     }
 }
