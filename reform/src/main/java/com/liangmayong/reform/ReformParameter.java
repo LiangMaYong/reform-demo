@@ -248,6 +248,11 @@ public class ReformParameter {
         return this;
     }
 
+    /**
+     * isLocalCache
+     *
+     * @return localCache
+     */
     public boolean isLocalCache() {
         return localCache;
     }
