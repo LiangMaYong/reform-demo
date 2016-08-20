@@ -28,4 +28,5 @@ dependencies {
     compile 'com.liangmayong:volleyutils:1.0.0'
     compile 'com.alibaba:fastjson:1.2.11'
     compile project(':reform')
+    compile project(':preferences')
 }

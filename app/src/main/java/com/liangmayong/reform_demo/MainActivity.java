@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.liangmayong.preferences.Preferences;
 import com.liangmayong.reform.interfaces.OnReformListener;
 import com.liangmayong.reform.Reform;
 import com.liangmayong.reform.ReformResponse;
@@ -18,9 +19,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Preferences.init(getApplication(), true);
+        Toast.makeText(getApplicationContext(), Preferences.getDefaultPreferences().getString("testBody", ""), Toast.LENGTH_SHORT).show();
         Reform.getModuleInstance(ReModule.class).getConfig(this, new OnReformListener() {
             @Override
             public void onResponse(ReformResponse response) {
+                Preferences.getDefaultPreferences().setString("testBody", response.getBody());
                 if (response.isSuccess()) {
                     try {
                         if (response.parseJsonArray("return_value").length() > 0) {

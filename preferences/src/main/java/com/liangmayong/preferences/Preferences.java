@@ -135,7 +135,17 @@ public class Preferences {
     private Map<String, String> preferencesValueMap = new HashMap<String, String>();
 
     /**
-     * get string
+     * getString
+     *
+     * @param key key
+     * @return string
+     */
+    public String getString(String key) {
+        return getString(key, "");
+    }
+
+    /**
+     * getString
      *
      * @param key      key
      * @param defValue defValue

@@ -1,1 +1,1 @@
-include ':app', ':reform', ':preferences'
+include ':app', ':reform', ':preferences', ':eventsink', ':photoselector', ':permissionmanager'

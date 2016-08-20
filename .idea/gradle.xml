@@ -9,6 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/eventsink" />
+            <option value="$PROJECT_DIR$/permissionmanager" />
+            <option value="$PROJECT_DIR$/photoselector" />
             <option value="$PROJECT_DIR$/preferences" />
             <option value="$PROJECT_DIR$/reform" />
           </set>
@@ -17,6 +20,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/eventsink" />
+            <option value="$PROJECT_DIR$/permissionmanager" />
+            <option value="$PROJECT_DIR$/photoselector" />
             <option value="$PROJECT_DIR$/preferences" />
             <option value="$PROJECT_DIR$/reform" />
           </set>
