@@ -1,1 +1,1 @@
-include ':app', ':reform'
+include ':app', ':reform', ':preferences'
