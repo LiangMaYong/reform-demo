@@ -2,6 +2,7 @@ package com.liangmayong.reform;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.util.Log;
 
 import com.liangmayong.reform.annotation.Converter;
 import com.liangmayong.reform.annotation.Interceptor;
@@ -245,7 +246,9 @@ public final class Reform {
             ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
             ReformLog.d("onResponse-Params:" + parameter.getParams());
             ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
-            ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+            if (response.isFormCache()) {
+                ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+            }
             ReformLog.d("onResponse-Body:" + response.getBody());
             ReformLog.d("----------------------------------------");
             return;
@@ -272,7 +275,9 @@ public final class Reform {
                 ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
                 ReformLog.d("onResponse-Params:" + parameter.getParams());
                 ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
-                ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                if (response.isFormCache()) {
+                    ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                }
                 ReformLog.d("onResponse-Body:" + response.getBody());
                 ReformLog.d("----------------------------------------");
             }
@@ -302,7 +307,9 @@ public final class Reform {
                         ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
                         ReformLog.d("onResponse-Params:" + parameter.getParams());
                         ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
-                        ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                        if (response.isFormCache()) {
+                            ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                        }
                         ReformLog.d("onResponse-Body:" + response.getBody());
                         ReformLog.d("----------------------------------------");
                         return;
@@ -392,7 +399,9 @@ public final class Reform {
                 ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
                 ReformLog.d("onResponse-Params:" + parameter.getParams());
                 ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
-                ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                if (response.isFormCache()) {
+                    ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                }
                 ReformLog.d("onResponse-Body:" + response.getBody());
                 ReformLog.d("----------------------------------------");
                 if (parameter != null && parameter.getConverter() != null) {
@@ -457,12 +466,15 @@ public final class Reform {
             ReformResponse response = interceptor.getCache(context, url, parameter);
             if (response != null) {
                 ReformLog.d("-----------------Reform-----------------");
-                ReformLog.d("RequestType:getLocalCache");
+                ReformLog.d("RequestType:getCache");
                 ReformLog.d("onResponse-Url:" + response.getUrl());
                 ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
-                ReformLog.d("onResponse-Body:" + response.getBody());
                 ReformLog.d("onResponse-Params:" + parameter.getParams());
                 ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                if (response.isFormCache()) {
+                    ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                }
+                ReformLog.d("onResponse-Body:" + response.getBody());
                 ReformLog.d("----------------------------------------");
                 if (parameter != null && parameter.getConverter() != null) {
                     response.setConverter(parameter.getConverter());
@@ -477,7 +489,7 @@ public final class Reform {
         } catch (ReformError reformError) {
             reformParameterList.remove(parameter);
             ReformLog.d("-----------------Reform-----------------");
-            ReformLog.d("RequestType:getLocalCache");
+            ReformLog.d("RequestType:getCache");
             ReformLog.d("onResponse-Url:" + url);
             ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
             ReformLog.d("onResponse-Params:" + parameter.getParams());
@@ -576,6 +588,129 @@ public final class Reform {
                 return object;
             }
             return null;
+        }
+    }
+
+    private static class ReformLog {
+
+        private ReformLog() {
+        }
+
+        private static final String TAG = "Reform";
+
+        /**
+         * Send a DEBUG log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         */
+        public static void d(String msg) {
+            if (Reform.isDebug()) {
+                Log.d(TAG, msg);
+            }
+        }
+
+        /**
+         * Send a DEBUG log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         * @param tr  An exception to log
+         */
+        public static void d(String msg, Throwable tr) {
+            if (Reform.isDebug()) {
+                Log.d(TAG, msg, tr);
+            }
+        }
+
+        /**
+         * Send a ERROR log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         */
+        public static void e(String msg) {
+            if (Reform.isDebug()) {
+                Log.e(TAG, msg);
+            }
+        }
+
+        /**
+         * Send a ERROR log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         * @param tr  An exception to log
+         */
+        public static void e(String msg, Throwable tr) {
+            if (Reform.isDebug()) {
+                Log.e(TAG, msg, tr);
+            }
+        }
+
+        /**
+         * Send a INFO log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         */
+        public static void i(String msg) {
+            if (Reform.isDebug()) {
+                Log.i(TAG, msg);
+            }
+        }
+
+        /**
+         * Send a INFO log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         * @param tr  An exception to log
+         */
+        public static void i(String msg, Throwable tr) {
+            if (Reform.isDebug()) {
+                Log.i(TAG, msg, tr);
+            }
+        }
+
+        /**
+         * Send a VERBOSE log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         */
+        public static void v(String msg) {
+            if (Reform.isDebug()) {
+                Log.v(TAG, msg);
+            }
+        }
+
+        /**
+         * Send a VERBOSE log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         * @param tr  An exception to log
+         */
+        public static void v(String msg, Throwable tr) {
+            if (Reform.isDebug()) {
+                Log.v(TAG, msg, tr);
+            }
+        }
+
+        /**
+         * Send a WARN log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         */
+        public static void w(String msg) {
+            if (Reform.isDebug()) {
+                Log.w(TAG, msg);
+            }
+        }
+
+        /**
+         * Send a WARN log message and log the exception.
+         *
+         * @param msg The message you would like logged.
+         * @param tr  An exception to log
+         */
+        public static void w(String msg, Throwable tr) {
+            if (Reform.isDebug()) {
+                Log.w(TAG, msg, tr);
+            }
         }
     }
 }
