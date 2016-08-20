@@ -90,18 +90,14 @@ public class ReformModule {
         if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("ftp://")) {
             return url;
         } else if (url.startsWith("/")) {
-            String httpName = "";
-            int indexStart = getReform().getBaseUrl().indexOf("://");
-            if (indexStart > 0) {
-                httpName = getReform().getBaseUrl().substring(0, indexStart) + "://";
-            }
-            return httpName + getUrlHost(getReform().getBaseUrl()) + url;
+            return getUrlHost(getReform().getBaseUrl()) + url;
         } else if (url.startsWith("./")) {
+            String baseUrl = getReform().getBaseUrl();
             int sunStart = 1;
-            if (getReform().getBaseUrl().endsWith("/")) {
+            if (baseUrl.endsWith("/")) {
                 sunStart = 2;
             }
-            return getReform().getBaseUrl() + url.substring(sunStart);
+            return baseUrl + url.substring(sunStart);
         } else {
             return getReform().getBaseUrl() + url;
         }
@@ -115,7 +111,12 @@ public class ReformModule {
      */
     private String getUrlHost(String url) {
         try {
-            return new URL(url).getHost();
+            String httpName = "";
+            int indexStart = url.indexOf("://");
+            if (indexStart > 0) {
+                httpName = url.substring(0, indexStart) + "://";
+            }
+            return httpName + new URL(url).getHost();
         } catch (MalformedURLException e) {
         }
         return url;

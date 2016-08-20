@@ -236,7 +236,11 @@ public final class Reform {
         if (getInterceptor() == null) {
             return "";
         }
-        return getInterceptor().getBaseUrl();
+        String baseUrl = getInterceptor().getBaseUrl();
+        if (baseUrl == null) {
+            baseUrl = "";
+        }
+        return baseUrl;
     }
 
     /**

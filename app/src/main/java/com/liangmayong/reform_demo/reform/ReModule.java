@@ -23,6 +23,7 @@ public class ReModule extends ReformModule {
         parameter.setMethod(ReformParameter.Method.POST);
         enqueue(context, "./get_app_config", parameter, listener);
     }
+
     public void getOSS(Context context, OnReformListener listener) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Expert-Id2", "1");
