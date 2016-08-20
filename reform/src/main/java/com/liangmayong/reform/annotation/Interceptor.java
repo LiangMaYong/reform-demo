@@ -1,6 +1,6 @@
 package com.liangmayong.reform.annotation;
 
-import com.liangmayong.reform.ReformInterceptor;
+import com.liangmayong.reform.interfaces.ReformInterceptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

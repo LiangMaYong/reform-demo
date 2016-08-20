@@ -1,11 +1,15 @@
 package com.liangmayong.reform;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 
 import com.liangmayong.reform.annotation.Converter;
 import com.liangmayong.reform.annotation.Interceptor;
-import com.liangmayong.reform.error.ReformError;
-import com.liangmayong.reform.error.ReformUnkownError;
+import com.liangmayong.reform.errors.ReformError;
+import com.liangmayong.reform.errors.ReformUnkownError;
+import com.liangmayong.reform.interfaces.OnReformListener;
+import com.liangmayong.reform.interfaces.ReformConverter;
+import com.liangmayong.reform.interfaces.ReformInterceptor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -24,10 +28,27 @@ public final class Reform {
 
     // debug
     private static boolean DEBUG = true;
+    // debugable
+    private static boolean DEBUGABLE = true;
     // reformMap
     private static Map<String, Reform> reformMap = new HashMap<String, Reform>();
     // reformModuleMap
     private static Map<String, ReformModule> reformModuleMap = new HashMap<String, ReformModule>();
+
+    /**
+     * autoDebugable
+     *
+     * @param context context
+     * @return true or false
+     */
+    private static void autoDebugable(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            DEBUGABLE = (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            DEBUGABLE = true;
+        }
+    }
 
     /**
      * setDebug
@@ -44,7 +65,7 @@ public final class Reform {
      * @return debug
      */
     public static boolean isDebug() {
-        return DEBUG;
+        return DEBUG && DEBUGABLE;
     }
 
     /**
@@ -169,6 +190,10 @@ public final class Reform {
      */
     protected void enqueue(Context context, final ReformConverter converter, String url, final ReformParameter parameter,
                            final OnReformListener listener) {
+        if (context == null) {
+            listener.onFailure(new ReformUnkownError("Context is null"));
+        }
+        Reform.autoDebugable(context);
         if (parameter == null) {
             listener.onFailure(new ReformUnkownError("ReformParameter is null"));
             return;
@@ -236,6 +261,10 @@ public final class Reform {
      * @throws ReformError error
      */
     protected ReformResponse execute(Context context, ReformConverter converter, String url, ReformParameter parameter) throws ReformError {
+        if (context == null) {
+            throw new ReformUnkownError("Context is null");
+        }
+        Reform.autoDebugable(context);
         if (parameter == null) {
             throw new ReformUnkownError("ReformParameter is null");
         }

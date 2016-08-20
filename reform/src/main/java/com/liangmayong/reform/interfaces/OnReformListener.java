@@ -1,6 +1,7 @@
-package com.liangmayong.reform;
+package com.liangmayong.reform.interfaces;
 
-import com.liangmayong.reform.error.ReformError;
+import com.liangmayong.reform.ReformResponse;
+import com.liangmayong.reform.errors.ReformError;
 
 /**
  * OnReformListener
@@ -15,13 +16,13 @@ public interface OnReformListener {
      *
      * @param response response
      */
-    public void onResponse(ReformResponse response);
+    void onResponse(ReformResponse response);
 
     /**
      * onFailure
      *
      * @param error error
      */
-    public void onFailure(ReformError error);
+    void onFailure(ReformError error);
 
 }

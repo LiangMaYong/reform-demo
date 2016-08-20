@@ -1,6 +1,6 @@
 package com.liangmayong.reform.annotation;
 
-import com.liangmayong.reform.ReformConverter;
+import com.liangmayong.reform.interfaces.ReformConverter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,6 @@
-package com.liangmayong.reform;
+package com.liangmayong.reform.interfaces;
+
+import com.liangmayong.reform.ReformResponse;
 
 import java.util.List;
 

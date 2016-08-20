@@ -1,8 +1,10 @@
-package com.liangmayong.reform;
+package com.liangmayong.reform.interfaces;
 
 import android.content.Context;
 
-import com.liangmayong.reform.error.ReformError;
+import com.liangmayong.reform.ReformParameter;
+import com.liangmayong.reform.ReformResponse;
+import com.liangmayong.reform.errors.ReformError;
 
 import java.util.Map;
 

@@ -2,7 +2,7 @@ package com.liangmayong.reform_demo.reform;
 
 import android.content.Context;
 
-import com.liangmayong.reform.OnReformListener;
+import com.liangmayong.reform.interfaces.OnReformListener;
 import com.liangmayong.reform.ReformModule;
 import com.liangmayong.reform.ReformParameter;
 import com.liangmayong.reform.annotation.Converter;

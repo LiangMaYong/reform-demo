@@ -1,4 +1,4 @@
-package com.liangmayong.reform.error;
+package com.liangmayong.reform.errors;
 
 /**
  * ReformNetworkError

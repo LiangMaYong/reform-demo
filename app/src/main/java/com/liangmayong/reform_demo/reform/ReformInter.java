@@ -3,16 +3,16 @@ package com.liangmayong.reform_demo.reform;
 import android.content.Context;
 
 import com.android.volley.VolleyError;
-import com.liangmayong.reform.OnReformListener;
-import com.liangmayong.reform.ReformInterceptor;
+import com.liangmayong.reform.interfaces.OnReformListener;
+import com.liangmayong.reform.interfaces.ReformInterceptor;
 import com.liangmayong.reform.ReformParameter;
 import com.liangmayong.reform.ReformResponse;
-import com.liangmayong.reform.error.ReformAuthFailureError;
-import com.liangmayong.reform.error.ReformError;
-import com.liangmayong.reform.error.ReformNetworkError;
-import com.liangmayong.reform.error.ReformParseError;
-import com.liangmayong.reform.error.ReformServerError;
-import com.liangmayong.reform.error.ReformUnkownError;
+import com.liangmayong.reform.errors.ReformAuthFailureError;
+import com.liangmayong.reform.errors.ReformError;
+import com.liangmayong.reform.errors.ReformNetworkError;
+import com.liangmayong.reform.errors.ReformParseError;
+import com.liangmayong.reform.errors.ReformServerError;
+import com.liangmayong.reform.errors.ReformUnkownError;
 import com.liangmayong.volleyutils.VolleyErrorHelper;
 import com.liangmayong.volleyutils.VolleyUtils;
 

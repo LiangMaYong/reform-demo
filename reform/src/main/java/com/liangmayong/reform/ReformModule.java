@@ -2,8 +2,10 @@ package com.liangmayong.reform;
 
 import android.content.Context;
 
-import com.liangmayong.reform.error.ReformError;
-import com.liangmayong.reform.error.ReformUnkownError;
+import com.liangmayong.reform.errors.ReformError;
+import com.liangmayong.reform.errors.ReformUnkownError;
+import com.liangmayong.reform.interfaces.OnReformListener;
+import com.liangmayong.reform.interfaces.ReformConverter;
 
 import java.net.MalformedURLException;
 import java.net.URL;

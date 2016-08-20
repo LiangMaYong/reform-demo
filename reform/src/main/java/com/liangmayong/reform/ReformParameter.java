@@ -2,6 +2,9 @@ package com.liangmayong.reform;
 
 import android.os.Bundle;
 
+import com.liangmayong.reform.interfaces.ReformConverter;
+import com.liangmayong.reform.interfaces.ReformInterceptor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

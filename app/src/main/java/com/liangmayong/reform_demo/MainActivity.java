@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.liangmayong.reform.OnReformListener;
+import com.liangmayong.reform.interfaces.OnReformListener;
 import com.liangmayong.reform.Reform;
 import com.liangmayong.reform.ReformResponse;
-import com.liangmayong.reform.error.ReformError;
+import com.liangmayong.reform.errors.ReformError;
 import com.liangmayong.reform_demo.reform.ReModule;
 
 import org.json.JSONException;
