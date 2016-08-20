@@ -2,7 +2,9 @@ package com.liangmayong.reform;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +22,7 @@ public class ReformParameter {
      * @version 1.0
      */
     public static enum Method {
-        POST, GET, PUT, DELETE;
+        POST, GET, PUT, DELETE, FILES;
     }
 
     /**
@@ -33,14 +35,24 @@ public class ReformParameter {
         NET, NET_LOCAL, LOCAL, LOCAL_NET;
     }
 
+    //request time
+    private long requestTime = 0;
     //method
     private Method method = Method.GET;
     //params
     private Map<String, String> params = null;
+    //commonparams
+    private Map<String, String> commonparams = null;
+    //interceptorCommonParams
+    private Map<String, String> interceptorCommonParams = null;
+    //files
+    private List<ReformFile> files = null;
     //headers
     private Map<String, String> headers = null;
     //commonheaders
     private Map<String, String> commonheaders = null;
+    //interceptorCommonHeaders
+    private Map<String, String> interceptorCommonHeaders = null;
     //converter
     private ReformConverter converter = null;
     //interceptor
@@ -88,7 +100,6 @@ public class ReformParameter {
         return this;
     }
 
-
     /**
      * setInterceptor
      *
@@ -96,6 +107,30 @@ public class ReformParameter {
      */
     public void setInterceptor(ReformInterceptor interceptor) {
         this.interceptor = interceptor;
+    }
+
+
+    /**
+     * setFiles
+     *
+     * @param files files
+     * @return this
+     */
+    public ReformParameter setFiles(List<ReformFile> files) {
+        this.files = files;
+        return this;
+    }
+
+    /**
+     * getFiles
+     *
+     * @return files
+     */
+    public List<ReformFile> getFiles() {
+        if (files == null) {
+            files = new ArrayList<ReformFile>();
+        }
+        return files;
     }
 
     /**
@@ -151,6 +186,17 @@ public class ReformParameter {
     }
 
     /**
+     * setCommonParams
+     *
+     * @param commonparams commonparams
+     * @return this
+     */
+    public ReformParameter setCommonParams(Map<String, String> commonparams) {
+        this.commonparams = commonparams;
+        return this;
+    }
+
+    /**
      * setHeaders
      *
      * @param headers headers
@@ -171,6 +217,46 @@ public class ReformParameter {
     public ReformParameter setCommonHeaders(Map<String, String> commonheaders) {
         this.commonheaders = commonheaders;
         return this;
+    }
+
+    /**
+     * setInterceptorCommonParams
+     *
+     * @param interceptorCommonParams interceptorCommonParams
+     * @return this
+     */
+    public ReformParameter setInterceptorCommonParams(Map<String, String> interceptorCommonParams) {
+        this.interceptorCommonParams = interceptorCommonParams;
+        return this;
+    }
+
+    /**
+     * setInterceptorCommonHeaders
+     *
+     * @param interceptorCommonHeaders interceptorCommonHeaders
+     * @return this
+     */
+    public ReformParameter setInterceptorCommonHeaders(Map<String, String> interceptorCommonHeaders) {
+        this.interceptorCommonHeaders = interceptorCommonHeaders;
+        return this;
+    }
+
+    /**
+     * getCommonParams
+     *
+     * @return commonparams
+     */
+    public Map<String, String> getCommonParams() {
+        return commonparams;
+    }
+
+    /**
+     * getCommonHeaders
+     *
+     * @return commonheaders
+     */
+    public Map<String, String> getCommonHeaders() {
+        return commonheaders;
     }
 
     /**
@@ -210,7 +296,15 @@ public class ReformParameter {
      * @return params
      */
     public Map<String, String> getParams() {
-        return params;
+        Map<String, String> newparams = new HashMap<String, String>();
+        if (interceptorCommonParams != null) {
+            newparams.putAll(interceptorCommonParams);
+        }
+        if (commonparams != null) {
+            newparams.putAll(commonparams);
+        }
+        newparams.putAll(this.params);
+        return newparams;
     }
 
     /**
@@ -220,6 +314,9 @@ public class ReformParameter {
      */
     public Map<String, String> getHeaders() {
         Map<String, String> newheaders = new HashMap<String, String>();
+        if (interceptorCommonHeaders != null) {
+            newheaders.putAll(interceptorCommonHeaders);
+        }
         if (commonheaders != null) {
             newheaders.putAll(commonheaders);
         }
@@ -255,5 +352,23 @@ public class ReformParameter {
      */
     public boolean isLocalCache() {
         return localCache;
+    }
+
+    /**
+     * getRequestTime
+     *
+     * @return requestTime
+     */
+    public long getRequestTime() {
+        return requestTime;
+    }
+
+    /**
+     * setRequestTime
+     *
+     * @param requestTime requestTime
+     */
+    public void setRequestTime(long requestTime) {
+        this.requestTime = requestTime;
     }
 }

@@ -29,11 +29,18 @@ public interface ReformInterceptor {
     void destroy(Context context);
 
     /**
-     * base url
+     * getCommonHeaders
      *
-     * @return base url
+     * @return common headers
      */
     Map<String, String> getCommonHeaders();
+
+    /**
+     * getCommonParams
+     *
+     * @return common params
+     */
+    Map<String, String> getCommonParams();
 
     /**
      * enqueue

@@ -19,14 +19,26 @@ public class ReformModule {
     public ReformModule() {
     }
 
+    // reform
     private Reform reform;
+    // reformConverter
     private ReformConverter converter;
 
-    public void setConverter(ReformConverter converter) {
+    /**
+     * setConverter
+     *
+     * @param converter converter
+     */
+    private final void setConverter(ReformConverter converter) {
         this.converter = converter;
     }
 
-    public void setReform(Reform reform) {
+    /**
+     * setReform
+     *
+     * @param reform reform
+     */
+    private final void setReform(Reform reform) {
         this.reform = reform;
     }
 

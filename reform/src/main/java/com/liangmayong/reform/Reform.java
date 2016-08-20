@@ -8,6 +8,7 @@ import com.liangmayong.reform.error.ReformError;
 import com.liangmayong.reform.error.ReformUnkownError;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,8 +89,16 @@ public final class Reform {
                 } catch (Exception e) {
                 }
             }
-            t.setReform(reform);
-            t.setConverter(reformConverter);
+            try {
+                method(clazz, t, "setReform", Reform.class).invoke(reform);
+            } catch (Exception e) {
+                ReformLog.e("set reform error", e);
+            }
+            try {
+                method(clazz, t, "setConverter", ReformConverter.class).invoke(reformConverter);
+            } catch (Exception e) {
+                ReformLog.e("set converter error", e);
+            }
             reformModuleMap.put(key, t);
             return t;
         } catch (Exception e) {
@@ -160,7 +169,11 @@ public final class Reform {
      */
     protected void enqueue(Context context, final ReformConverter converter, String url, final ReformParameter parameter,
                            final OnReformListener listener) {
-        if (getInterceptor() == null) {
+        if (parameter == null) {
+            listener.onFailure(new ReformUnkownError("ReformParameter is null"));
+            return;
+        }
+        if (getInterceptor() == null && (parameter == null || parameter.getInterceptor() == null)) {
             listener.onFailure(new ReformUnkownError("ReformInterceptor is null"));
             return;
         }
@@ -169,7 +182,9 @@ public final class Reform {
         if (interceptor == null) {
             interceptor = getInterceptor();
         }
-        parameter.setCommonHeaders(interceptor.getCommonHeaders());
+        parameter.setInterceptorCommonHeaders(interceptor.getCommonHeaders());
+        parameter.setInterceptorCommonParams(interceptor.getCommonParams());
+        parameter.setRequestTime(System.currentTimeMillis());
         interceptor.enqueue(context, url, parameter, new OnReformListener() {
             @Override
             public void onResponse(ReformResponse response) {
@@ -179,11 +194,17 @@ public final class Reform {
                     } else {
                         response.setConverter(converter);
                     }
+                    response.setRequestTime(parameter.getRequestTime());
+                    response.setResponseTime(System.currentTimeMillis());
                     listener.onResponse(response);
                 }
                 reformParameterList.remove(parameter);
-                ReformLog.d("onResponse:" + response.getUrl());
-                ReformLog.d("onResponse:" + response.getBody());
+                ReformLog.d("-----------------Reform-----------------");
+                ReformLog.d("onResponse-Url:" + response.getUrl());
+                ReformLog.d("onResponse-Body:" + response.getBody());
+                ReformLog.d("onResponse-Params:" + parameter.getParams());
+                ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                ReformLog.d("----------------------------------------");
             }
 
             @Override
@@ -192,7 +213,9 @@ public final class Reform {
                     listener.onFailure(e);
                 }
                 reformParameterList.remove(parameter);
+                ReformLog.d("-----------------Reform-----------------");
                 ReformLog.d("onFailure", e);
+                ReformLog.d("----------------------------------------");
             }
         });
     }
@@ -206,9 +229,11 @@ public final class Reform {
      * @return Response
      * @throws ReformError error
      */
-    protected ReformResponse execute(Context context, ReformConverter converter, String url, ReformParameter parameter)
-            throws ReformError {
-        if (getInterceptor() == null) {
+    protected ReformResponse execute(Context context, ReformConverter converter, String url, ReformParameter parameter) throws ReformError {
+        if (parameter == null) {
+            throw new ReformUnkownError("ReformParameter is null");
+        }
+        if (getInterceptor() == null && parameter.getInterceptor() == null) {
             throw new ReformUnkownError("ReformInterceptor is null");
         }
         ReformInterceptor interceptor = parameter.getInterceptor();
@@ -216,15 +241,35 @@ public final class Reform {
             interceptor = getInterceptor();
         }
         reformParameterList.add(parameter);
-        parameter.setCommonHeaders(interceptor.getCommonHeaders());
-        ReformResponse response = interceptor.execute(context, url, parameter);
-        if (parameter != null && parameter.getConverter() != null) {
-            response.setConverter(parameter.getConverter());
-        } else {
-            response.setConverter(converter);
+        parameter.setInterceptorCommonHeaders(interceptor.getCommonHeaders());
+        parameter.setInterceptorCommonParams(interceptor.getCommonParams());
+        parameter.setRequestTime(System.currentTimeMillis());
+        try {
+            ReformResponse response = interceptor.execute(context, url, parameter);
+            if (response != null) {
+                ReformLog.d("-----------------Reform-----------------");
+                ReformLog.d("onResponse-Url:" + response.getUrl());
+                ReformLog.d("onResponse-Body:" + response.getBody());
+                ReformLog.d("onResponse-Params:" + parameter.getParams());
+                ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                ReformLog.d("----------------------------------------");
+                if (parameter != null && parameter.getConverter() != null) {
+                    response.setConverter(parameter.getConverter());
+                } else {
+                    response.setConverter(converter);
+                }
+            }
+            reformParameterList.remove(parameter);
+            response.setRequestTime(parameter.getRequestTime());
+            response.setResponseTime(System.currentTimeMillis());
+            return response;
+        } catch (ReformError reformError) {
+            reformParameterList.remove(parameter);
+            ReformLog.d("-----------------Reform-----------------");
+            ReformLog.d("onFailure", reformError);
+            ReformLog.d("----------------------------------------");
+            throw reformError;
         }
-        reformParameterList.remove(parameter);
-        return response;
     }
 
     /**
@@ -259,5 +304,62 @@ public final class Reform {
             }
         }
         reformParameterList.removeAll(reformParameterList);
+    }
+
+
+    /**
+     * method
+     *
+     * @param clazz          clazz
+     * @param object         object
+     * @param method         method
+     * @param parameterTypes parameterTypes
+     * @return APMethod
+     */
+    private static final ReflectMethod method(Class<?> clazz, Object object, String method, Class<?>... parameterTypes) {
+        if (object == null) {
+            return null;
+        }
+        return new ReflectMethod(clazz, object, method, parameterTypes);
+    }
+
+    /**
+     * ReflectMethod
+     */
+    private static final class ReflectMethod {
+
+        private Method method;
+        private Object object;
+
+        private Method getDeclaredMethod(Class<?> clazz, String name, Class<?>... parameterTypes) {
+            Method method = null;
+            for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
+                try {
+                    method = clazz.getDeclaredMethod(name, parameterTypes);
+                    return method;
+                } catch (Exception e) {
+                }
+            }
+            return null;
+        }
+
+        public ReflectMethod(Class<?> cls, Object object, String method, Class<?>... parameterTypes) {
+            try {
+                this.object = object;
+                this.method = getDeclaredMethod(cls, method, parameterTypes);
+            } catch (Exception e) {
+            }
+        }
+
+        public Object invoke(Object... args) throws Exception {
+            if (method != null) {
+                method.setAccessible(true);
+                Object object = method.invoke(this.object, args);
+                method = null;
+                this.object = null;
+                return object;
+            }
+            return null;
+        }
     }
 }

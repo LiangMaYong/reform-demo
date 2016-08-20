@@ -43,6 +43,11 @@ public class ReformInter implements ReformInterceptor {
     }
 
     @Override
+    public Map<String, String> getCommonParams() {
+        return null;
+    }
+
+    @Override
     public void enqueue(Context context, final String url, final ReformParameter reformParameter, final OnReformListener onReformListener) {
         VolleyUtils.postStringRequest(context, url, reformParameter.getParams(), reformParameter.getHeaders(), reformParameter.isCacheEnable(), new com.android.volley.Response.Listener<String>() {
             @Override

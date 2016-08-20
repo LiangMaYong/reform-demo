@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(), response.parseJsonInt("timestamp", 0) + "", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), response.getBody(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), response.getConsumingTime() + "", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), response.getErrorMessage(), Toast.LENGTH_SHORT).show();
                 }

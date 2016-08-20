@@ -26,6 +26,10 @@ public final class ReformResponse {
         this.body = body;
     }
 
+    //request time
+    private long requestTime = 0;
+    //response time
+    private long responseTime = 0;
     // url
     private String url = "";
     // body
@@ -284,5 +288,50 @@ public final class ReformResponse {
             return getBodyJSON().getJSONArray(key);
         }
         throw new JSONException("body not json string");
+    }
+
+    /**
+     * setRequestTime
+     *
+     * @param requestTime requestTime
+     */
+    public void setRequestTime(long requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    /**
+     * getRequestTime
+     *
+     * @return requestTime
+     */
+    public long getRequestTime() {
+        return requestTime;
+    }
+
+    /**
+     * setResponseTime
+     *
+     * @param responseTime responseTime
+     */
+    public void setResponseTime(long responseTime) {
+        this.responseTime = responseTime;
+    }
+
+    /**
+     * getResponseTime
+     *
+     * @return responseTime
+     */
+    public long getResponseTime() {
+        return responseTime;
+    }
+
+    /**
+     * getConsumingTime
+     *
+     * @return consumingTime
+     */
+    public long getConsumingTime() {
+        return responseTime - requestTime;
     }
 }
