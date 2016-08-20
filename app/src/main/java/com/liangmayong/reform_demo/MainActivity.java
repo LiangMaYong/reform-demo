@@ -1,9 +1,11 @@
 package com.liangmayong.reform_demo;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.liangmayong.eventsink.EventSink;
 import com.liangmayong.preferences.Preferences;
 import com.liangmayong.reform.interfaces.OnReformListener;
 import com.liangmayong.reform.Reform;
@@ -20,6 +22,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Preferences.init(getApplication(), true);
+        EventSink.init(getApplication(), true);
+
+        EventSink.getDefault().register(this, new String[]{"main"}, new EventSink.OnEventListener() {
+            @Override
+            public void onEvent(Context context, EventSink.EventContent content) {
+                Toast.makeText(getApplicationContext(), content.getAction() + "/" + content.getWhat(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        EventSink.getDefault().getSender("main").send(0).sendDelayed(1, 10000);
         Toast.makeText(getApplicationContext(), Preferences.getDefaultPreferences().getString("testBody", ""), Toast.LENGTH_SHORT).show();
         Reform.getModuleInstance(ReModule.class).getConfig(this, new OnReformListener() {
             @Override
@@ -56,5 +68,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Reform.getModuleInstance(ReModule.class).destroy(this);
+        EventSink.unregisterAll(this);
     }
 }
