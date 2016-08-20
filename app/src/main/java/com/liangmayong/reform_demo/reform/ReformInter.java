@@ -85,7 +85,6 @@ public class ReformInter implements ReformInterceptor {
 
     @Override
     public ReformResponse getCache(Context context, String url, ReformParameter parameter) throws ReformError {
-        Log.d("TAG", "ReformResponse is null");
-        return new ReformResponse(url, "55555555555555555555555555555555");
+        throw new ReformUnkownError("");
     }
 }
