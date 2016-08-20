@@ -6,7 +6,6 @@ android {
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -20,3 +19,7 @@ android {
 
 dependencies {
 }
+
+apply from: 'https://raw.githubusercontent.com/LiangMaYong/android-library-gradle-publish/master/library.gradle'
+apply from: 'https://raw.githubusercontent.com/LiangMaYong/android-library-gradle-publish/master/bintray.gradle'
+apply from: 'https://raw.githubusercontent.com/LiangMaYong/android-library-gradle-publish/master/install.gradle'

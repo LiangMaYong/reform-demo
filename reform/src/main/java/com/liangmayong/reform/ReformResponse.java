@@ -198,6 +198,7 @@ public final class ReformResponse {
      * parse
      *
      * @param entityClass entityClass
+     * @param <T>         entity type
      * @return instance
      */
     public <T> T parse(Class<T> entityClass) {
@@ -212,7 +213,8 @@ public final class ReformResponse {
      *
      * @param key         key
      * @param entityClass entityClass
-     * @return
+     * @param <T>         entity type
+     * @return instance
      */
     public <T> T parse(String key, Class<T> entityClass) {
         if (getConverter() == null) {
@@ -225,6 +227,7 @@ public final class ReformResponse {
      * parseList
      *
      * @param entityClass entityClass
+     * @param <T>         entity type
      * @return list
      */
     public <T> List<T> parseList(Class<T> entityClass) {
@@ -237,7 +240,9 @@ public final class ReformResponse {
     /**
      * parseList
      *
+     * @param key         key
      * @param entityClass entityClass
+     * @param <T>         entity type
      * @return list
      */
     public <T> List<T> parseList(String key, Class<T> entityClass) {
@@ -250,7 +255,8 @@ public final class ReformResponse {
     /**
      * parseJsonInt
      *
-     * @param key key
+     * @param key          key
+     * @param defualtValue defualtValue
      * @return value
      */
     public int parseJsonInt(String key, int defualtValue) {
@@ -289,6 +295,7 @@ public final class ReformResponse {
      *
      * @param key key
      * @return value
+     * @throws JSONException error
      */
     public JSONObject parseJsonObject(String key) throws JSONException {
         if (getBodyJSON() != null) {
@@ -302,6 +309,7 @@ public final class ReformResponse {
      *
      * @param key key
      * @return value
+     * @throws JSONException error
      */
     public JSONArray parseJsonArray(String key) throws JSONException {
         if (getBodyJSON() != null) {

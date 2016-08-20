@@ -73,6 +73,7 @@ public final class Reform {
      * getModuleInstance
      *
      * @param clazz clazz
+     * @param <T>   module type
      * @return reform module
      */
     public static final <T extends ReformModule> T getModuleInstance(Class<T> clazz) {
@@ -185,6 +186,7 @@ public final class Reform {
      * enqueue
      *
      * @param context   context
+     * @param converter   converter
      * @param url       url
      * @param parameter parameter
      * @param listener  listener
@@ -336,6 +338,7 @@ public final class Reform {
      * execute
      *
      * @param context   context
+     * @param converter   converter
      * @param url       url
      * @param parameter parameter
      * @return Response
@@ -432,6 +435,7 @@ public final class Reform {
      * getCache
      *
      * @param context   context
+     * @param converter   converter
      * @param url       url
      * @param parameter parameter
      * @return Response
