@@ -20,16 +20,11 @@ public class ReModule extends ReformModule {
 
     public void getConfig(Context context, OnReformListener listener) {
         ReformParameter parameter = new ReformParameter();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Expert-Id", "2");
         parameter.setMethod(ReformParameter.Method.POST);
+        parameter.setHeaders(headers);
         enqueue(context, "./get_app_config", parameter, listener);
     }
 
-    public void getOSS(Context context, OnReformListener listener) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Expert-Id2", "1");
-        ReformParameter parameter = new ReformParameter();
-        parameter.setHeaders(headers);
-        parameter.setMethod(ReformParameter.Method.POST);
-        enqueue(context, "http://ssssssssssss..com/get_app_config", parameter, listener);
-    }
 }

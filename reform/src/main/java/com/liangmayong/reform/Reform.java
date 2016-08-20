@@ -182,8 +182,14 @@ public final class Reform {
         if (interceptor == null) {
             interceptor = getInterceptor();
         }
-        parameter.setInterceptorCommonHeaders(interceptor.getCommonHeaders());
-        parameter.setInterceptorCommonParams(interceptor.getCommonParams());
+        try {
+            method(ReformParameter.class, parameter, "setInterceptorCommonHeaders", Map.class).invoke(interceptor.getCommonHeaders());
+        } catch (Exception e) {
+        }
+        try {
+            method(ReformParameter.class, parameter, "setInterceptorCommonParams", Map.class).invoke(interceptor.getCommonParams());
+        } catch (Exception e) {
+        }
         parameter.setRequestTime(System.currentTimeMillis());
         interceptor.enqueue(context, url, parameter, new OnReformListener() {
             @Override
@@ -241,8 +247,14 @@ public final class Reform {
             interceptor = getInterceptor();
         }
         reformParameterList.add(parameter);
-        parameter.setInterceptorCommonHeaders(interceptor.getCommonHeaders());
-        parameter.setInterceptorCommonParams(interceptor.getCommonParams());
+        try {
+            method(ReformParameter.class, parameter, "setInterceptorCommonHeaders", Map.class).invoke(interceptor.getCommonHeaders());
+        } catch (Exception e) {
+        }
+        try {
+            method(ReformParameter.class, parameter, "setInterceptorCommonParams", Map.class).invoke(interceptor.getCommonParams());
+        } catch (Exception e) {
+        }
         parameter.setRequestTime(System.currentTimeMillis());
         try {
             ReformResponse response = interceptor.execute(context, url, parameter);

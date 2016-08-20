@@ -30,6 +30,8 @@ public final class ReformResponse {
     private long requestTime = 0;
     //response time
     private long responseTime = 0;
+    //defualt success
+    private boolean defualtSuccess = false;
     // url
     private String url = "";
     // body
@@ -62,18 +64,22 @@ public final class ReformResponse {
      * setParams
      *
      * @param params params
+     * @return this
      */
-    public void setParams(Map<String, String> params) {
+    public ReformResponse setParams(Map<String, String> params) {
         this.params = params;
+        return this;
     }
 
     /**
      * setHeaders
      *
      * @param headers headers
+     * @return this
      */
-    public void setHeaders(Map<String, String> headers) {
+    public ReformResponse setHeaders(Map<String, String> headers) {
         this.headers = headers;
+        return this;
     }
 
     /**
@@ -116,9 +122,11 @@ public final class ReformResponse {
      * setConverter
      *
      * @param converter converter
+     * @return this
      */
-    public void setConverter(ReformConverter converter) {
+    public ReformResponse setConverter(ReformConverter converter) {
         this.converter = converter;
+        return this;
     }
 
     /**
@@ -132,10 +140,18 @@ public final class ReformResponse {
 
     @Override
     public String toString() {
-        if (params == null || params.isEmpty()) {
-            return "Response {" + "url=" + url + ",body=" + body + '}';
-        }
-        return "Response {" + "url=" + url + "@params=" + params + ",body=" + body + '}';
+        return "Response {" + "url=" + url + ((params == null || params.isEmpty()) ? "" : "@params=" + params) + ",body=" + body + '}';
+    }
+
+    /**
+     * setDefualtSuccess
+     *
+     * @param defualtSuccess defualtSuccess
+     * @return this
+     */
+    public ReformResponse setDefualtSuccess(boolean defualtSuccess) {
+        this.defualtSuccess = defualtSuccess;
+        return this;
     }
 
     /**
@@ -145,7 +161,7 @@ public final class ReformResponse {
      */
     public boolean isSuccess() {
         if (getConverter() == null) {
-            return true;
+            return defualtSuccess;
         }
         return getConverter().isSuccess(this);
     }

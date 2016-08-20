@@ -225,7 +225,7 @@ public class ReformParameter {
      * @param interceptorCommonParams interceptorCommonParams
      * @return this
      */
-    public ReformParameter setInterceptorCommonParams(Map<String, String> interceptorCommonParams) {
+    private ReformParameter setInterceptorCommonParams(Map<String, String> interceptorCommonParams) {
         this.interceptorCommonParams = interceptorCommonParams;
         return this;
     }
@@ -236,27 +236,9 @@ public class ReformParameter {
      * @param interceptorCommonHeaders interceptorCommonHeaders
      * @return this
      */
-    public ReformParameter setInterceptorCommonHeaders(Map<String, String> interceptorCommonHeaders) {
+    private ReformParameter setInterceptorCommonHeaders(Map<String, String> interceptorCommonHeaders) {
         this.interceptorCommonHeaders = interceptorCommonHeaders;
         return this;
-    }
-
-    /**
-     * getCommonParams
-     *
-     * @return commonparams
-     */
-    public Map<String, String> getCommonParams() {
-        return commonparams;
-    }
-
-    /**
-     * getCommonHeaders
-     *
-     * @return commonheaders
-     */
-    public Map<String, String> getCommonHeaders() {
-        return commonheaders;
     }
 
     /**
