@@ -90,27 +90,35 @@ public final class Reform {
             Constructor<T> classConstructor = clazz.getDeclaredConstructor();
             classConstructor.setAccessible(true);
             T t = (T) classConstructor.newInstance();
-            Interceptor interceptor = clazz.getAnnotation(Interceptor.class);
-            if (interceptor == null) {
-                // must set interceptor
-                ReformLog.e("module must set interceptor");
-                return t;
-            }
-            Class<? extends ReformInterceptor> interceptorClass = interceptor.value();
-            if (interceptorClass == ReformInterceptor.class) {
-                // interceptor must extends ReformInterceptor
-                ReformLog.e("interceptor must extends ReformInterceptor");
-                return t;
+            Class<? extends ReformInterceptor> interceptorClass = t.getInterceptorType();
+            if (interceptorClass == null) {
+                Interceptor interceptor = clazz.getAnnotation(Interceptor.class);
+                if (interceptor == null) {
+                    // must set interceptor
+                    ReformLog.e("module must set interceptor");
+                    return t;
+                }
+                interceptorClass = interceptor.value();
+                if (interceptorClass == ReformInterceptor.class) {
+                    // interceptor must extends ReformInterceptor
+                    ReformLog.e("interceptor must extends ReformInterceptor");
+                    return t;
+                }
             }
             Reform reform = interceptor(interceptorClass);
             ReformConverter reformConverter = null;
-            Converter converter = clazz.getAnnotation(Converter.class);
-            if (converter != null) {
-                try {
-                    Class<? extends ReformConverter> converterType = converter.value();
-                    reformConverter = converterType.newInstance();
-                } catch (Exception e) {
+            Class<? extends ReformConverter> converterType = t.getConverterType();
+            if (converterType == null) {
+                Converter converter = clazz.getAnnotation(Converter.class);
+                if (converter != null) {
+                    try {
+                        converterType = converter.value();
+                    } catch (Exception e) {
+                    }
                 }
+            }
+            if (converterType != null) {
+                reformConverter = converterType.newInstance();
             }
             try {
                 method(clazz, t, "setReform", Reform.class).invoke(reform);
@@ -186,7 +194,7 @@ public final class Reform {
      * enqueue
      *
      * @param context   context
-     * @param converter   converter
+     * @param converter converter
      * @param url       url
      * @param parameter parameter
      * @param listener  listener
@@ -338,7 +346,7 @@ public final class Reform {
      * execute
      *
      * @param context   context
-     * @param converter   converter
+     * @param converter converter
      * @param url       url
      * @param parameter parameter
      * @return Response
@@ -435,7 +443,7 @@ public final class Reform {
      * getCache
      *
      * @param context   context
-     * @param converter   converter
+     * @param converter converter
      * @param url       url
      * @param parameter parameter
      * @return Response

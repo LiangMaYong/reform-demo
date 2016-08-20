@@ -7,6 +7,7 @@ import com.liangmayong.reform.ReformModule;
 import com.liangmayong.reform.ReformParameter;
 import com.liangmayong.reform.annotation.Converter;
 import com.liangmayong.reform.annotation.Interceptor;
+import com.liangmayong.reform.interfaces.ReformInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,5 +29,4 @@ public class ReModule extends ReformModule {
         parameter.setPriorityLocalCache(true);
         enqueue(context, "./get_app_config", parameter, listener);
     }
-
 }

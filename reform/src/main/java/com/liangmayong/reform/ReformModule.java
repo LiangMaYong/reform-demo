@@ -6,6 +6,7 @@ import com.liangmayong.reform.errors.ReformError;
 import com.liangmayong.reform.errors.ReformUnkownError;
 import com.liangmayong.reform.interfaces.OnReformListener;
 import com.liangmayong.reform.interfaces.ReformConverter;
+import com.liangmayong.reform.interfaces.ReformInterceptor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -70,7 +71,7 @@ public class ReformModule {
      * @param parameter parameter
      * @param listener  listener
      */
-    protected void enqueue(Context context, String url, ReformParameter parameter, final OnReformListener listener) {
+    protected final void enqueue(Context context, String url, ReformParameter parameter, final OnReformListener listener) {
         if (getReform() != null) {
             getReform().enqueue(context, getConverter(), parseUrl(url), parameter, listener);
             return;
@@ -87,7 +88,7 @@ public class ReformModule {
      * @return response
      * @throws ReformError error
      */
-    protected ReformResponse execute(Context context, String url, ReformParameter parameter) throws ReformError {
+    protected final ReformResponse execute(Context context, String url, ReformParameter parameter) throws ReformError {
         if (getReform() != null) {
             return getReform().execute(context, getConverter(), parseUrl(url), parameter);
         }
@@ -103,7 +104,7 @@ public class ReformModule {
      * @return response
      * @throws ReformError error
      */
-    protected ReformResponse getCache(Context context, String url, ReformParameter parameter) throws ReformError {
+    protected final ReformResponse getCache(Context context, String url, ReformParameter parameter) throws ReformError {
         if (getReform() != null) {
             return getReform().getCache(context, getConverter(), parseUrl(url), parameter);
         }
@@ -161,5 +162,24 @@ public class ReformModule {
         if (getReform() != null) {
             getReform().destroy(context);
         }
+    }
+
+
+    /**
+     * getInterceptorType
+     *
+     * @return interceptorType
+     */
+    protected Class<? extends ReformInterceptor> getInterceptorType() {
+        return null;
+    }
+
+    /**
+     * getConverterType
+     *
+     * @return converterType
+     */
+    protected Class<? extends ReformConverter> getConverterType() {
+        return null;
     }
 }
