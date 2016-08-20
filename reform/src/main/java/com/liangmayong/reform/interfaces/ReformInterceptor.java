@@ -64,4 +64,15 @@ public interface ReformInterceptor {
      * @throws ReformError e
      */
     ReformResponse execute(Context context, String url, ReformParameter parameter) throws ReformError;
+
+    /**
+     * getCache
+     *
+     * @param context   context
+     * @param url       url
+     * @param parameter parameter
+     * @return Response
+     * @throws ReformError e
+     */
+    ReformResponse getCache(Context context, String url, ReformParameter parameter) throws ReformError;
 }

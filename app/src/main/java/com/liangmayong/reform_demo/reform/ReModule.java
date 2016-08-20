@@ -24,6 +24,8 @@ public class ReModule extends ReformModule {
         headers.put("Expert-Id", "2");
         parameter.setMethod(ReformParameter.Method.POST);
         parameter.setHeaders(headers);
+        parameter.setCacheEnable(true);
+        parameter.setPriorityLocalCache(true);
         enqueue(context, "./get_app_config", parameter, listener);
     }
 

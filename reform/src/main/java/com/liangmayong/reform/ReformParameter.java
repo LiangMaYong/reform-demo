@@ -60,11 +60,10 @@ public class ReformParameter {
     private ReformConverter converter = null;
     //interceptor
     private ReformInterceptor interceptor = null;
-
     //cache enable
     private boolean cacheEnable = false;
-    //local cache
-    private boolean localCache = false;
+    //priority local cache
+    private boolean priorityLocalCache = false;
     //extras
     private Bundle extras = null;
 
@@ -322,21 +321,21 @@ public class ReformParameter {
     /**
      * setLocalCache
      *
-     * @param localCache localCache
+     * @param priorityLocalCache priorityLocalCache
      * @return this
      */
-    public ReformParameter setLocalCache(boolean localCache) {
-        this.localCache = localCache;
+    public ReformParameter setPriorityLocalCache(boolean priorityLocalCache) {
+        this.priorityLocalCache = priorityLocalCache;
         return this;
     }
 
     /**
-     * isLocalCache
+     * isPriorityLocalCache
      *
-     * @return localCache
+     * @return priorityLocalCache
      */
-    public boolean isLocalCache() {
-        return localCache;
+    public boolean isPriorityLocalCache() {
+        return priorityLocalCache;
     }
 
     /**

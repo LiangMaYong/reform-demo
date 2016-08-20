@@ -1,6 +1,7 @@
 package com.liangmayong.reform_demo.reform;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.liangmayong.reform.interfaces.OnReformListener;
@@ -80,5 +81,11 @@ public class ReformInter implements ReformInterceptor {
     @Override
     public ReformResponse execute(Context context, String s, ReformParameter reformParameter) throws ReformError {
         return null;
+    }
+
+    @Override
+    public ReformResponse getCache(Context context, String url, ReformParameter parameter) throws ReformError {
+        Log.d("TAG", "ReformResponse is null");
+        return new ReformResponse(url, "55555555555555555555555555555555");
     }
 }

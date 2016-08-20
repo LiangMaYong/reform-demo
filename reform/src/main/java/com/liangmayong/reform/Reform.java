@@ -188,7 +188,7 @@ public final class Reform {
      * @param parameter parameter
      * @param listener  listener
      */
-    protected void enqueue(Context context, final ReformConverter converter, String url, final ReformParameter parameter,
+    protected void enqueue(final Context context, final ReformConverter converter, final String url, final ReformParameter parameter,
                            final OnReformListener listener) {
         if (context == null) {
             listener.onFailure(new ReformUnkownError("Context is null"));
@@ -216,9 +216,45 @@ public final class Reform {
         } catch (Exception e) {
         }
         parameter.setRequestTime(System.currentTimeMillis());
+
+        ReformResponse response = null;
+        if (parameter.isCacheEnable() && parameter.isPriorityLocalCache()) {
+            //local cache
+            try {
+                response = interceptor.getCache(context, url, parameter);
+            } catch (ReformError reformError) {
+            }
+        }
+        if (response != null) {
+            //local cache
+            if (listener != null) {
+                if (parameter != null && parameter.getConverter() != null) {
+                    response.setConverter(parameter.getConverter());
+                } else {
+                    response.setConverter(converter);
+                }
+                response.setRequestTime(parameter.getRequestTime());
+                response.setResponseTime(System.currentTimeMillis());
+                response.setFormCache(true);
+                listener.onResponse(response);
+            }
+            reformParameterList.remove(parameter);
+            ReformLog.d("-----------------Reform-----------------");
+            ReformLog.d("RequestType:enqueue");
+            ReformLog.d("onResponse-Url:" + response.getUrl());
+            ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
+            ReformLog.d("onResponse-Params:" + parameter.getParams());
+            ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+            ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+            ReformLog.d("onResponse-Body:" + response.getBody());
+            ReformLog.d("----------------------------------------");
+            return;
+        }
+        final ReformInterceptor finalInterceptor = interceptor;
         interceptor.enqueue(context, url, parameter, new OnReformListener() {
             @Override
             public void onResponse(ReformResponse response) {
+                //net
                 if (listener != null) {
                     if (parameter != null && parameter.getConverter() != null) {
                         response.setConverter(parameter.getConverter());
@@ -231,21 +267,59 @@ public final class Reform {
                 }
                 reformParameterList.remove(parameter);
                 ReformLog.d("-----------------Reform-----------------");
+                ReformLog.d("RequestType:enqueue");
                 ReformLog.d("onResponse-Url:" + response.getUrl());
-                ReformLog.d("onResponse-Body:" + response.getBody());
+                ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
                 ReformLog.d("onResponse-Params:" + parameter.getParams());
                 ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                ReformLog.d("onResponse-Body:" + response.getBody());
                 ReformLog.d("----------------------------------------");
             }
 
             @Override
-            public void onFailure(ReformError e) {
+            public void onFailure(ReformError reformError) {
+
+                if (parameter.isCacheEnable() && !parameter.isPriorityLocalCache()) {
+                    //local cache
+                    try {
+                        ReformResponse response = finalInterceptor.getCache(context, url, parameter);
+                        if (listener != null) {
+                            if (parameter != null && parameter.getConverter() != null) {
+                                response.setConverter(parameter.getConverter());
+                            } else {
+                                response.setConverter(converter);
+                            }
+                            response.setRequestTime(parameter.getRequestTime());
+                            response.setResponseTime(System.currentTimeMillis());
+                            response.setFormCache(true);
+                            listener.onResponse(response);
+                        }
+                        reformParameterList.remove(parameter);
+                        ReformLog.d("-----------------Reform-----------------");
+                        ReformLog.d("RequestType:enqueue");
+                        ReformLog.d("onResponse-Url:" + response.getUrl());
+                        ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
+                        ReformLog.d("onResponse-Params:" + parameter.getParams());
+                        ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                        ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                        ReformLog.d("onResponse-Body:" + response.getBody());
+                        ReformLog.d("----------------------------------------");
+                        return;
+                    } catch (ReformError e) {
+                    }
+                }
                 if (listener != null) {
-                    listener.onFailure(e);
+                    listener.onFailure(reformError);
                 }
                 reformParameterList.remove(parameter);
                 ReformLog.d("-----------------Reform-----------------");
-                ReformLog.d("onFailure", e);
+                ReformLog.d("RequestType:enqueue");
+                ReformLog.d("onResponse-Url:" + url);
+                ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
+                ReformLog.d("onResponse-Params:" + parameter.getParams());
+                ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                ReformLog.d("onFailure", reformError);
                 ReformLog.d("----------------------------------------");
             }
         });
@@ -286,10 +360,106 @@ public final class Reform {
         }
         parameter.setRequestTime(System.currentTimeMillis());
         try {
-            ReformResponse response = interceptor.execute(context, url, parameter);
+            ReformResponse response = null;
+            if (parameter.isCacheEnable() && parameter.isPriorityLocalCache()) {
+                //local cache
+                try {
+                    response = interceptor.getCache(context, url, parameter);
+                    response.setFormCache(true);
+                } catch (ReformError reformError) {
+                }
+            }
+            if (response == null) {
+                try {
+                    //net
+                    response = interceptor.execute(context, url, parameter);
+                } catch (ReformError reformError) {
+                    if (parameter.isCacheEnable() && !parameter.isPriorityLocalCache()) {
+                        //local cache
+                        try {
+                            response = interceptor.getCache(context, url, parameter);
+                            response.setFormCache(true);
+                        } catch (ReformError e) {
+                            throw e;
+                        }
+                    }
+                }
+            }
             if (response != null) {
                 ReformLog.d("-----------------Reform-----------------");
+                ReformLog.d("RequestType:execute");
                 ReformLog.d("onResponse-Url:" + response.getUrl());
+                ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
+                ReformLog.d("onResponse-Params:" + parameter.getParams());
+                ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+                ReformLog.d("onResponse-FormCache:" + response.isFormCache());
+                ReformLog.d("onResponse-Body:" + response.getBody());
+                ReformLog.d("----------------------------------------");
+                if (parameter != null && parameter.getConverter() != null) {
+                    response.setConverter(parameter.getConverter());
+                } else {
+                    response.setConverter(converter);
+                }
+            }
+            reformParameterList.remove(parameter);
+            response.setRequestTime(parameter.getRequestTime());
+            response.setResponseTime(System.currentTimeMillis());
+            return response;
+        } catch (ReformError reformError) {
+            reformParameterList.remove(parameter);
+            ReformLog.d("-----------------Reform-----------------");
+            ReformLog.d("RequestType:execute");
+            ReformLog.d("onResponse-Url:" + url);
+            ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
+            ReformLog.d("onResponse-Params:" + parameter.getParams());
+            ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
+            ReformLog.d("onFailure", reformError);
+            ReformLog.d("----------------------------------------");
+            throw reformError;
+        }
+    }
+
+    /**
+     * getCache
+     *
+     * @param context   context
+     * @param url       url
+     * @param parameter parameter
+     * @return Response
+     * @throws ReformError error
+     */
+    protected ReformResponse getCache(Context context, ReformConverter converter, String url, ReformParameter parameter) throws ReformError {
+        if (context == null) {
+            throw new ReformUnkownError("Context is null");
+        }
+        Reform.autoDebugable(context);
+        if (parameter == null) {
+            throw new ReformUnkownError("ReformParameter is null");
+        }
+        if (getInterceptor() == null && parameter.getInterceptor() == null) {
+            throw new ReformUnkownError("ReformInterceptor is null");
+        }
+        ReformInterceptor interceptor = parameter.getInterceptor();
+        if (interceptor == null) {
+            interceptor = getInterceptor();
+        }
+        reformParameterList.add(parameter);
+        try {
+            method(ReformParameter.class, parameter, "setInterceptorCommonHeaders", Map.class).invoke(interceptor.getCommonHeaders());
+        } catch (Exception e) {
+        }
+        try {
+            method(ReformParameter.class, parameter, "setInterceptorCommonParams", Map.class).invoke(interceptor.getCommonParams());
+        } catch (Exception e) {
+        }
+        parameter.setRequestTime(System.currentTimeMillis());
+        try {
+            ReformResponse response = interceptor.getCache(context, url, parameter);
+            if (response != null) {
+                ReformLog.d("-----------------Reform-----------------");
+                ReformLog.d("RequestType:getLocalCache");
+                ReformLog.d("onResponse-Url:" + response.getUrl());
+                ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
                 ReformLog.d("onResponse-Body:" + response.getBody());
                 ReformLog.d("onResponse-Params:" + parameter.getParams());
                 ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
@@ -307,6 +477,11 @@ public final class Reform {
         } catch (ReformError reformError) {
             reformParameterList.remove(parameter);
             ReformLog.d("-----------------Reform-----------------");
+            ReformLog.d("RequestType:getLocalCache");
+            ReformLog.d("onResponse-Url:" + url);
+            ReformLog.d("onResponse-Method:" + parameter.getMethod().name());
+            ReformLog.d("onResponse-Params:" + parameter.getParams());
+            ReformLog.d("onResponse-Headers:" + parameter.getHeaders());
             ReformLog.d("onFailure", reformError);
             ReformLog.d("----------------------------------------");
             throw reformError;

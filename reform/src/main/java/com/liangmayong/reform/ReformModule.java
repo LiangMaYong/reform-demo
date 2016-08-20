@@ -95,6 +95,22 @@ public class ReformModule {
     }
 
     /**
+     * getCache
+     *
+     * @param context   context
+     * @param url       url
+     * @param parameter parameter
+     * @return response
+     * @throws ReformError error
+     */
+    protected ReformResponse getCache(Context context, String url, ReformParameter parameter) throws ReformError {
+        if (getReform() != null) {
+            return getReform().getCache(context, getConverter(), parseUrl(url), parameter);
+        }
+        throw new ReformUnkownError("reform is null");
+    }
+
+    /**
      * parseUrl
      *
      * @param url url

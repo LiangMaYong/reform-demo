@@ -38,6 +38,8 @@ public final class ReformResponse {
     private String url = "";
     // body
     private String body = "";
+    // isFormCache
+    private boolean isFormCache = false;
     // bodyJSON
     private volatile JSONObject bodyJSON = null;
     // converter
@@ -351,5 +353,24 @@ public final class ReformResponse {
      */
     public long getConsumingTime() {
         return responseTime - requestTime;
+    }
+
+
+    /**
+     * setFormCache
+     *
+     * @param formCache formCache
+     */
+    public void setFormCache(boolean formCache) {
+        isFormCache = formCache;
+    }
+
+    /**
+     * isFormCache
+     *
+     * @return isFormCache
+     */
+    public boolean isFormCache() {
+        return isFormCache;
     }
 }
